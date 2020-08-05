@@ -15,7 +15,7 @@ KUBECTL ?= kubectl
 # Vagrant Provider
 VAGRANT_DEFAULT_PROVIDER ?= virtualbox
 # Vagrantfile set to use.
-BOX_OS ?= fedora
+BOX_OS ?= prolinux
 # Vagrant Box image to use.
 BOX_IMAGE ?= $(shell grep "^\$$box_image.*=.*'.*'\.freeze" "$(MFILECWD)/vagrantfiles/$(BOX_OS)/common" | cut -d\' -f4)
 # Disk setup

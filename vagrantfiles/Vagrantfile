@@ -19,7 +19,11 @@ load $oscommonvarsfile if File.exist?($oscommonvarsfile)
 
 # After all variables are loaded and per BOX_OS vars are overriden, load scripts
 # Load the `Vagrantfile_scripts` file
+if BOX_OS == 'prolinux'
+$vagrantfilescripts = File.expand_path('../Vagrantfile_scripts_prolinux', __FILE__)
+else
 $vagrantfilescripts = File.expand_path('../Vagrantfile_scripts', __FILE__)
+end
 load $vagrantfilescripts
 
 # Load the type specific variables (e.g., master, node) (0 is equal to not a node)

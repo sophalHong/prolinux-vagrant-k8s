@@ -1,8 +1,7 @@
-# k8s-vagrant-multi-node
+# vagrant-k8s-installer
 
-[![Build Status](https://travis-ci.org/galexrt/k8s-vagrant-multi-node.svg?branch=master)](https://travis-ci.org/galexrt/k8s-vagrant-multi-node)
-
-This project was based on work from [coolsvap/kubeadm-vagrant](https://github.com/coolsvap/kubeadm-vagrant) by [@coolsvap](https://twitter.com/coolsvap), now it is mostly independent.
+This project was based on work from [ galexrt /
+k8s-vagrant-multi-node](https://github.com/galexrt/k8s-vagrant-multi-node) by [@galexrt](https://github.com/galexrt), now it is mostly independent.
 
 A demo of the start and destroy of a cluster can be found here: [README.md Demo section](#demo).
 
@@ -106,6 +105,7 @@ List of currently available Vagrantfile sets:
 
 | Name      | Container Runtime                           | OS Version   | Special Notes                                                                                                            |
 | --------- | ------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| `prolinux`| [Docker/Moby](https://github.com/moby/moby) | ProLinux 7   | N/A                                                                                                                      |
 | `centos7` | [Docker/Moby](https://github.com/moby/moby) | CentOS 7     | N/A                                                                                                                      |
 | `centos8` | [Docker/Moby](https://github.com/moby/moby) | CentOS 8     | `KUBE_NETWORK=calico` is forced, due to issues under CentOS 8 regarding `iptables`.                                      |
 | `centos`  | [Docker/Moby](https://github.com/moby/moby) | CentOS 7     | Use `centos7` in favor of this, as this "target" might be changed to `centos8` in a future release.                      |
@@ -234,7 +234,7 @@ versions                       Print the "imporant" tools versions out for easie
 | Variable Name                   | Default Value            | Description                                                                                                                                                                                                                                                                          |
 | ------------------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `VAGRANT_DEFAULT_PROVIDER`      | `virtualbox`             | Which Vagrant provider to use. Available are `virtualbox` and `libvirt`.                                                                                                                                                                                                             |
-| `BOX_OS`                        | `fedora`                 | Which set of Vagrantfiles to use to start the VMs, see [Different OS / Vagrantfiles](#different-os--vagrantfiles) section.                                                                                                                                                           |
+| `BOX_OS`                        | `prolinux`                 | Which set of Vagrantfiles to use to start the VMs, see [Different OS / Vagrantfiles](#different-os--vagrantfiles) section.                                                                                                                                                           |
 | `BOX_IMAGE`                     | `""` (empty)             | Override the VM box image used (only use for override purposes as the image is set based on the `BOX_OS` variable).                                                                                                                                                                  |
 | `DISK_COUNT`                    | `2`                      | Set how many additional disks will be added to the VMs.                                                                                                                                                                                                                              |
 | `DISK_SIZE_GB`                  | `20` GB                  | Size of additional disks added to the VMs.                                                                                                                                                                                                                                           |
