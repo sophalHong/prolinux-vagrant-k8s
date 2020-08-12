@@ -9,8 +9,8 @@ DISK_SIZE_GB = ENV['DISK_SIZE_GB'].to_s.strip.empty? ? 20 : ENV['DISK_SIZE_GB'].
 # Resources
 MASTER_CPUS = ENV['MASTER_CPUS'].to_s.strip.empty? ? 2 : ENV['MASTER_CPUS'].to_i
 MASTER_MEMORY_SIZE_GB = ENV['MASTER_MEMORY_SIZE_GB'].to_s.strip.empty? ? 2 : ENV['MASTER_MEMORY_SIZE_GB'].to_i
-NODE_CPUS = ENV['NODE_CPUS'].to_s.strip.empty? ? 1 : ENV['NODE_CPUS'].to_i
-NODE_MEMORY_SIZE_GB = ENV['NODE_MEMORY_SIZE_GB'].to_s.strip.empty? ? 1 : ENV['NODE_MEMORY_SIZE_GB'].to_i
+NODE_CPUS = ENV['NODE_CPUS'].to_s.strip.empty? ? 2 : ENV['NODE_CPUS'].to_i
+NODE_MEMORY_SIZE_GB = ENV['NODE_MEMORY_SIZE_GB'].to_s.strip.empty? ? 2 : ENV['NODE_MEMORY_SIZE_GB'].to_i
 
 # BOX_OS specific fixes
 ## Currently only used by ubuntu
@@ -23,7 +23,6 @@ LIBVIRT_STORAGE_POOL = ENV['LIBVIRT_STORAGE_POOL'].to_s.strip.empty? ? 'default'
 MASTER_IP = ENV['MASTER_IP'].to_s.strip.empty? ? '192.168.26.10' : ENV['MASTER_IP']
 POD_NW_CIDR = ENV['POD_NW_CIDR'].to_s.strip.empty? ? '10.244.0.0/16' : ENV['POD_NW_CIDR']
 NODE_IP_NW = ENV['NODE_IP_NW'].to_s.strip.empty? ? '192.168.26.' : ENV['NODE_IP_NW']
-#NODE_IP = NODE_IP_NW + (NODE + 10).to_s
 NODE_IP = NODE_IP_NW + (NODE + MASTER_IP.split(".").last.to_i).to_s
 
 $userSSHPubKey = ENV['USER_SSHPUBKEY'].to_s.strip.empty? ? '' : ENV['USER_SSHPUBKEY']
