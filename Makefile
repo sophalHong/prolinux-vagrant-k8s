@@ -319,6 +319,24 @@ tests: ## Run shunit2 tests (`expect` command is required).
 	@KUBERNETES_VERSION=$$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt | sed 's/^v//') \
 		bash ./tests/cluster-tests.sh$(if $(TESTS), -- $(TESTS),)
 
+ceph-deploy: ## Deploy rook-ceph based on YAML files in `https://github.com/rook/rook`
+	@set -o pipefail; \
+		if [ -f "$(MFILECWD)add-on/rook/ceph.sh" ]; then \
+			$(MFILECWD)add-on/rook/ceph.sh deploy; \
+		else \
+			echo "'$(MFILECWD)add-on/rook/ceph.sh' NOT exists"; \
+			exit 1; \
+		fi
+
+ceph-teardown: ## Teardown rook-ceph based on YAML files in `https://github.com/rook/rook`
+	@set -o pipefail; \
+		if [ -f "$(MFILECWD)add-on/rook/ceph.sh" ]; then \
+			$(MFILECWD)add-on/rook/ceph.sh teardown; \
+		else \
+			echo "'$(MFILECWD)add-on/rook/ceph.sh' NOT exists"; \
+			exit 1; \
+		fi
+
 help: ## Show this help menu.
 	@echo "Usage: make [TARGET ...]"
 	@echo
@@ -327,6 +345,7 @@ help: ## Show this help menu.
 .DEFAULT_GOAL := help
 .EXPORT_ALL_VARIABLES:
 .PHONY: help kubectl kubectl-delete preflight token up \
+	ceph-deploy ceph-teardown \
 	clean clean-data clean-master clean-nodes \
 	load-image load-image-master load-image-nodes \
 	ssh-config ssh-config-master ssh-config-nodes \

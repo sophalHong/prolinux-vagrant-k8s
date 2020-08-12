@@ -18,6 +18,7 @@ A demo of the start and destroy of a cluster can be found here: [README.md Demo 
   - [Shutting down the environment](#shutting-down-the-environment)
   - [Copy local Docker image into VMs](#copy-local-docker-image-into-vms)
   - [Data inside VM](#data-inside-vm)
+  - [Deploy/Teardown rook-ceph](#DeployTeardown-rook\-ceph)
   - [Show `make` targets](#show-make-targets)
 - [Variables](#variables)
 - [Troubleshooting](#troubleshooting)
@@ -33,10 +34,12 @@ A demo of the start and destroy of a cluster can be found here: [README.md Demo 
 ## Prerequisites
 
 * `make`
-* `kubectl` - Optional when `KUBECTL_AUTO_CONF` is set to `false` (default: `true`).
 * `grep`
 * `cut`
 * `rsync`
+* `sshpass`
+* `jq`
+* `kubectl` - Optional when `KUBECTL_AUTO_CONF` is set to `false` (default: `true`).
 * Source for randomness (only used to generate a kubeadm token, when no custom `KUBETOKEN` is given):
   * `/dev/urandom`
   * `openssl` command - Fallback for when `/dev/urandom` is not available.
@@ -92,9 +95,9 @@ controller-manager   Healthy   ok
 etcd-0               Healthy   {"health": "true"}
 $ kubectl get nodes
 NAME      STATUS    ROLES     AGE       VERSION
-master    Ready     master    4m        v1.17.3
-node1     Ready     <none>    4m        v1.17.3
-node2     Ready     <none>    4m        v1.17.3
+master    Ready     master    4m        v1.18.6
+node1     Ready     <none>    4m        v1.18.6
+node2     Ready     <none>    4m        v1.18.6
 ```
 
 ## Different OS / Vagrantfiles
@@ -180,12 +183,24 @@ $ make load-image IMG=repo/image:tag TAG=new_repo/new_image:new_tag
 
 See the `data/VM_NAME/` directories, where `VM_NAME` is for example `master`.
 
+### Deploy/Teardown rook-ceph
+
+You can change version of rook-ceph by setting environment `ROOK_VERSION` or edit file `add-on/rook/ceph.sh`.
+```shell
+$ make ceph-deploy
+$ make ceph-teardown
+```
+
+See the `data/VM_NAME/` directories, where `VM_NAME` is for example `master`.
+
 ### Show `make` targets
 
 ```shell
 $ make help
 Usage: make [TARGET ...]
 
+ceph-deploy                    Deploy rook-ceph based on YAML files in `https://github.com/rook/rook`
+ceph-teardown                  Teardown rook-ceph based on YAML files in `https://github.com/rook/rook`
 clean-data                     Remove data (shared folders) and disks of all VMs (master and nodes).
 clean-force                    Remove all drives which should normally have been removed by the normal clean-master or clean-node-% targets.
 clean                          Destroy master and node VMs, delete data and the kubectl context.
