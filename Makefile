@@ -337,6 +337,24 @@ ceph-teardown: ## Teardown rook-ceph based on YAML files in `https://github.com/
 			exit 1; \
 		fi
 
+velero-deploy: ## Deploy backup/restore `velero` with `minio`
+	@set -o pipefail; \
+		if [ -f "$(MFILECWD)add-on/velero/velero.sh" ]; then \
+			$(MFILECWD)add-on/velero/velero.sh deploy; \
+		else \
+			echo "'$(MFILECWD)add-on/velero/velero.sh' NOT exists"; \
+			exit 1; \
+		fi
+
+velero-teardown: ## Teardown backup/restore `velero`
+	@set -o pipefail; \
+		if [ -f "$(MFILECWD)add-on/velero/velero.sh" ]; then \
+			$(MFILECWD)add-on/velero/velero.sh teardown; \
+		else \
+			echo "'$(MFILECWD)add-on/velero/velero.sh' NOT exists"; \
+			exit 1; \
+		fi
+
 help: ## Show this help menu.
 	@echo "Usage: make [TARGET ...]"
 	@echo

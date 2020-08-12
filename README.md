@@ -19,6 +19,7 @@ A demo of the start and destroy of a cluster can be found here: [README.md Demo 
   - [Copy local Docker image into VMs](#copy-local-docker-image-into-vms)
   - [Data inside VM](#data-inside-vm)
   - [Deploy/Teardown rook-ceph](#DeployTeardown-rook\-ceph)
+  - [Deploy/Teardown velero (backup/restore)](#DeployTeardown-velero)
   - [Show `make` targets](#show-make-targets)
 - [Variables](#variables)
 - [Troubleshooting](#troubleshooting)
@@ -186,12 +187,20 @@ See the `data/VM_NAME/` directories, where `VM_NAME` is for example `master`.
 ### Deploy/Teardown rook-ceph
 
 You can change version of rook-ceph by setting environment `ROOK_VERSION` or edit file `add-on/rook/ceph.sh`.
+
 ```shell
 $ make ceph-deploy
 $ make ceph-teardown
 ```
 
-See the `data/VM_NAME/` directories, where `VM_NAME` is for example `master`.
+### Deploy/Teardown velero
+
+You can change version of velero by setting environment `VELERO_VERSION` or edit file `add-on/velero/velero.sh`.
+
+```shell
+$ make velero-deploy
+$ make velero-teardown
+```
 
 ### Show `make` targets
 
@@ -241,6 +250,8 @@ vagrant-reload-master          Run vagrant reload for master VM.
 vagrant-reload-nodes           Run `vagrant reload` for all node VMs.
 vagrant-reload-node-%          Run `vagrant reload` for specific node  VM.
 vagrant-reload                 Run vagrant reload on master and nodes.
+velero-deploy                  Deploy backup/restore `velero` with `minio`
+velero-teardown                Teardown backup/restore `velero`
 versions                       Print the "imporant" tools versions out for easier debugging.
 ```
 
