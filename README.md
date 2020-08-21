@@ -190,6 +190,7 @@ You can change version of rook-ceph by setting environment `ROOK_VERSION` or edi
 
 ```shell
 $ make ceph-deploy
+$ make ceph-status
 $ make ceph-teardown
 ```
 
@@ -209,6 +210,7 @@ $ make help
 Usage: make [TARGET ...]
 
 ceph-deploy                    Deploy rook-ceph based on YAML files in `https://github.com/rook/rook`
+ceph-status                    Get CEPH status and pool state
 ceph-teardown                  Teardown rook-ceph based on YAML files in `https://github.com/rook/rook`
 clean-data                     Remove data (shared folders) and disks of all VMs (master and nodes).
 clean-force                    Remove all drives which should normally have been removed by the normal clean-master or clean-node-% targets.
