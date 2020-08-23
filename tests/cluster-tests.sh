@@ -111,7 +111,7 @@ testKubectlContextRemoved() {
     echo "=== END COMMAND OUTPUT ==="
 
     assertNotEquals "kubectl exit code non-zero" "0" "$rtrn"
-    assertContains "kubectl contains error that context does not exist" "$CMD_OUTPUT" "context was not found for specified context: k8s-vagrant-multi-node"
+    assertContains "kubectl contains error that context does not exist" "$CMD_OUTPUT" "context was not found for specified context: vagrant-k8s-installer"
 }
 
 . ./tests/test_helper/shunit2/shunit2
