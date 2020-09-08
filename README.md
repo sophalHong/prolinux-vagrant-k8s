@@ -323,11 +323,27 @@ Please note that these terminal recordings are currently outdated.
 
 ### Start Cluster
 
-[![asciicast](https://asciinema.org/a/186375.png)](https://asciinema.org/a/186375)
+[![asciicast](https://asciinema.org/a/F5iHLNXcU0LpzMUYZxVlCYe1k.svg)](https://asciinema.org/a/F5iHLNXcU0LpzMUYZxVlCYe1k)
 
 ### Destroy Cluster
 
-[![asciicast](https://asciinema.org/a/186376.png)](https://asciinema.org/a/186376)
+[![asciicast](https://asciinema.org/a/fDdIe22chcDCeNizm6pRrBJhy.svg)](https://asciinema.org/a/fDdIe22chcDCeNizm6pRrBJhy)
+
+### Deploy Rook-ceph (cluster, filesystem, blockpool, objectstore)
+
+[![asciicast](https://asciinema.org/a/4EM1Wy9SJW6pKojcCGMxtYcHO.svg)](https://asciinema.org/a/4EM1Wy9SJW6pKojcCGMxtYcHO)
+
+### Tear-down Rook-ceph
+
+[![asciicast](https://asciinema.org/a/bNIVX7lblpLbHs6nYTm9yOC56.svg)](https://asciinema.org/a/bNIVX7lblpLbHs6nYTm9yOC56)
+
+### Deploy Velero (Backup and Restore)
+
+[![asciicast](https://asciinema.org/a/dZUZ6VNKE2WuMbGMMNxy4WKou.svg)](https://asciinema.org/a/dZUZ6VNKE2WuMbGMMNxy4WKou)
+
+### Tear-down Velero
+
+[![asciicast](https://asciinema.org/a/GIaKiMy3YGCRukpDAk1POFR3L.svg)](https://asciinema.org/a/GIaKiMy3YGCRukpDAk1POFR3L)
 
 ## Creating an Issue
 
