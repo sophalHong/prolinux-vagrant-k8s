@@ -75,30 +75,31 @@ These resources can be changed by setting the according variables for the `make 
 
 ## Quickstart
 
-To start with the defaults, 1x master and 2x workers, run the following:
+To start with the defaults, 1x master and 1x workers, run the following:
 
 ```shell
-$ make up -j 3
+$ make up -j 2
 ```
 
-The `-j3` will cause three VMs to be started in parallel to speed up the cluster creation.
+The `-j2` will cause three VMs to be started in parallel to speed up the cluster creation.
 > **NOTE** Your `kubectl` is automatically configured to use a context for the
 > created cluster, after the master VM is started.
 > The context is named after the directory the `Makefile` is in.
 
 ```shell
 $ kubectl config current-context
-k8s-vagrant-multi-node
+prolinux-vagrant-k8s
+
 $ kubectl get componentstatus
 NAME                 STATUS    MESSAGE              ERROR
 scheduler            Healthy   ok
 controller-manager   Healthy   ok
 etcd-0               Healthy   {"health": "true"}
+
 $ kubectl get nodes
-NAME      STATUS    ROLES     AGE       VERSION
-master    Ready     master    4m        v1.18.6
-node1     Ready     <none>    4m        v1.18.6
-node2     Ready     <none>    4m        v1.18.6
+NAME     STATUS   ROLES    AGE     VERSION   INTERNAL-IP     EXTERNAL-IP   OS-IMAGE       KERNEL-VERSION           CONTAINER-RUNTIME
+master   Ready    master   6m30s   v1.19.0   192.168.26.10   <none>        ProLinux 7.8   3.10.0-1127.el7.x86_64   docker://19.3.12
+node1    Ready    <none>   3m22s   v1.19.0   192.168.26.11   <none>        ProLinux 7.8   3.10.0-1127.el7.x86_64   docker://19.3.12
 ```
 
 ## Different OS / Vagrantfiles
@@ -151,6 +152,7 @@ $ make status
 master                    not created (virtualbox)
 node1                     not created (virtualbox)
 node2                     not created (virtualbox)
+node3                     not created (virtualbox)
 ```
 
 ### Shutting down the environment
