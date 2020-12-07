@@ -38,6 +38,7 @@ for ((i=1; i<=retries; i++)); do
     yum-config-manager \
         --add-repo \
         https://download.docker.com/linux/centos/docker-ce.repo
+	sed -i 's/$releasever/7/g' /etc/yum.repos.d/docker-ce.repo
     yum install -y docker-ce docker-ce-cli containerd.io && \
         break
 
