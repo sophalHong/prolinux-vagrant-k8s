@@ -12,6 +12,15 @@ proxy_password=#{HTTP_PROXY_PASSWORD}
 EOF
 fi
 
+# Allow chrony to sync time aggressively in case VMs are stopped and started and fall out of sync
+if [ -f /etc/chrony.conf ]; then
+    # Comment out any existing makestep directives
+    sed -i '/^makestep .*/ s/^/# /' /etc/chrony.conf
+    echo "" >> /etc/chrony.conf
+    echo "makestep 1 -1" >> /etc/chrony.conf
+    systemctl restart chronyd
+fi
+
 if [ ! -f /usr/sbin/iptables-legacy ]; then
     retries=5
     for ((i=1; i<=retries; i++)); do
@@ -22,6 +31,13 @@ if [ ! -f /usr/sbin/iptables-legacy ]; then
     done
 fi
 update-alternatives --set iptables /usr/sbin/iptables-legacy
+
+retries=5
+for ((i=1; i<=retries; i++)); do
+    dnf update -y && \
+        break
+    [[ $retries -eq i ]] && { echo "Failed to update OS packages after 5 tries"; exit 1; }
+done
 
 if [ -n '#{INSTALL_ADDITIONAL_PACKAGES}' ]; then
     dnf clean packages
@@ -39,11 +55,10 @@ set -x
 
 retries=5
 for ((i=1; i<retries; i++)); do
-    dnf -y install dnf-plugins-core grubby
+    dnf -y install lvm2 dnf-plugins-core grubby
     dnf config-manager \
         --add-repo \
         https://download.docker.com/linux/fedora/docker-ce.repo
-    sed -i 's/$releasever/31/g' /etc/yum.repos.d/docker-ce.repo
     grubby --update-kernel=ALL --args="systemd.unified_cgroup_hierarchy=0"
 
     dnf -y install docker-ce docker-ce-cli containerd.io && \
