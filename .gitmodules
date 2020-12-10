@@ -1,3 +1,6 @@
 [submodule "tests/test_helper/shunit2"]
 	path = tests/test_helper/shunit2
 	url = https://github.com/kward/shunit2.git
+[submodule "k8s-vagrant-multi-node"]
+	path = k8s-vagrant-multi-node
+	url = https://github.com/galexrt/k8s-vagrant-multi-node.git

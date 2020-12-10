@@ -1,5 +1,5 @@
 # Bash is required as the shell
-SHELL := /bin/bash
+SHELL := /usr/bin/env bash
 
 # Set Makefile directory in variable for referencing other files
 MFILECWD = $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
@@ -26,7 +26,7 @@ MASTER_CPUS ?=
 MASTER_MEMORY_SIZE_GB ?=
 NODE_CPUS ?=
 NODE_MEMORY_SIZE_GB ?=
-NODE_COUNT ?=
+NODE_COUNT ?= 2
 # Libvirt
 LIBVIRT_STORAGE_POOL ?=
 # Network
@@ -52,6 +52,7 @@ KUBERNETES_PKG_VERSION_SUFFIX ?=
 KUBE_NETWORK ?=
 KUBECTL_AUTO_CONF ?= true
 USER_SSHPUBKEY ?=
+USER_POST_INSTALL_SCRIPT_PATH ?=
 HTTP_PROXY ?=
 HTTPS_PROXY ?=
 HTTP_PROXY_USERNAME ?=
@@ -219,9 +220,9 @@ start-master: preflight ## Start up master VM (automatically done by `up` target
 start-node-%: preflight ## Start node VM, where `%` is the number of the node.
 	NODE=$* $(VAGRANT) up --provider $(VAGRANT_DEFAULT_PROVIDER)
 
-start-nodes: preflight $(shell for i in $(shell seq 1 $(NODE_COUNT)); do echo "start-node-$$i"; done) ## Create and start all node VMs by utilizing the `node-X` target (automatically done by `up` target).
+start-nodes: preflight $(shell for (( i=1; i<=$(NODE_COUNT); i+=1 )); do echo "start-node-$$i"; done) ## Create and start all node VMs by utilizing the `node-X` target (automatically done by `up` target).
 
-stop: stop-master $(shell for i in $(shell seq 1 $(NODE_COUNT)); do echo "stop-node-$$i"; done) ## Stop/Halt master and all nodes VMs.
+stop: stop-master $(shell for (( i=1; i<=$(NODE_COUNT); i+=1 )); do echo "stop-node-$$i"; done) ## Stop/Halt master and all nodes VMs.
 
 stop-master: ## Stop/Halt the master VM.
 	$(VAGRANT) halt -f
@@ -229,7 +230,7 @@ stop-master: ## Stop/Halt the master VM.
 stop-node-%: ## Stop/Halt a node VM, where `%` is the number of the node.
 	NODE=$* $(VAGRANT) halt -f
 
-stop-nodes: $(shell for i in $(shell seq 1 $(NODE_COUNT)); do echo "stop-node-$$i"; done) ## Stop/Halt all node VMs.
+stop-nodes: $(shell for (( i=1; i<=$(NODE_COUNT); i+=1 )); do echo "stop-node-$$i"; done) ## Stop/Halt all node VMs.
 
 ssh-master: ## SSH into the master VM.
 	$(VAGRANT) ssh
@@ -237,7 +238,7 @@ ssh-master: ## SSH into the master VM.
 ssh-node-%: ## SSH into a node VM, where `%` is the number of the node.
 	NODE=$* $(VAGRANT) ssh
 
-clean: kubectl-delete clean-master $(shell for i in $(shell seq 1 $(NODE_COUNT)); do echo "clean-node-$$i"; done) ## Destroy master and node VMs, delete data and the kubectl context.
+clean: kubectl-delete clean-master $(shell for (( i=1; i<=$(NODE_COUNT); i+=1 )); do echo "clean-node-$$i"; done) ## Destroy master and node VMs, delete data and the kubectl context.
 	$(MAKE) clean-data
 
 clean-master: kubectl-delete ## Remove the master VM and the kubectl context.
@@ -246,7 +247,7 @@ clean-master: kubectl-delete ## Remove the master VM and the kubectl context.
 clean-node-%: ## Remove a node VM, where `%` is the number of the node.
 	-NODE=$* $(VAGRANT) destroy -f node$*
 
-clean-nodes: $(shell for i in $(shell seq 1 $(NODE_COUNT)); do echo "clean-node-$$i"; done) ## Remove all node VMs.
+clean-nodes: $(shell for (( i=1; i<=$(NODE_COUNT); i+=1 )); do echo "clean-node-$$i"; done) ## Remove all node VMs.
 
 clean-data: ## Remove data (shared folders) and disks of all VMs (master and nodes).
 	rm -v -rf "$(MFILECWD)/data/"*
@@ -263,9 +264,9 @@ vagrant-reload-master: vagrant-plugins ## Run vagrant reload for master VM.
 vagrant-reload-node-%: vagrant-plugins ## Run `vagrant reload` for specific node  VM.
 	NODE=$* $(VAGRANT) reload
 
-vagrant-reload-nodes: $(shell for i in $(shell seq 1 $(NODE_COUNT)); do echo "vagrant-reload-node-$$i"; done) ## Run `vagrant reload` for all node VMs.
+vagrant-reload-nodes: $(shell for (( i=1; i<=$(NODE_COUNT); i+=1 )); do echo "vagrant-reload-node-$$i"; done) ## Run `vagrant reload` for all node VMs.
 
-load-image: load-image-master $(shell for i in $(shell seq 1 $(NODE_COUNT)); do echo "load-image-node-$$i"; done) ## Load local/pulled Docker image into master and all node VMs.
+load-image: load-image-master $(shell for (( i=1; i<=$(NODE_COUNT); i+=1 )); do echo "load-image-node-$$i"; done) ## Load local/pulled Docker image into master and all node VMs.
 
 load-image-master: ## Load local/pulled image into master VM.
 	docker save $(IMG) | $(VAGRANT) ssh "master" -t -c 'sudo docker load'
@@ -279,19 +280,19 @@ load-image-node-%: ## Load local/pulled image into node VM, where `%` is the num
 		NODE=$* $(VAGRANT) ssh "node$*" -t -c 'sudo docker tag $(IMG) $(TAG)'; \
 	fi
 
-load-image-nodes: $(shell for i in $(shell seq 1 $(NODE_COUNT)); do echo "load-image-node-$$i"; done) ## Load local/pulled Docker image into all node VMs.
+load-image-nodes: $(shell for (( i=1; i<=$(NODE_COUNT); i+=1 )); do echo "load-image-node-$$i"; done) ## Load local/pulled Docker image into all node VMs.
 
 ssh-config: ssh-config-master ssh-config-nodes ## Generate SSH config for master and nodes.
 
 ssh-config-master: ## Generate SSH config just for the master.
 	@$(VAGRANT) ssh-config --host "master"
 
-ssh-config-nodes: $(shell for i in $(shell seq 1 $(NODE_COUNT)); do echo "ssh-config-$$i"; done) ## Generate SSH config just for the nodes.
+ssh-config-nodes: $(shell for (( i=1; i<=$(NODE_COUNT); i+=1 )); do echo "ssh-config-node-$$i"; done) ## Generate SSH config just for the nodes.
 
-ssh-config-node-%: $(shell for i in $(shell seq 1 $(NODE_COUNT)); do echo "ssh-config-$$i"; done) ## Generate SSH config just for the one node number given.
-	@NODE=$* $(VAGRANT) ssh-config --host "master"
+ssh-config-node-%: ## Generate SSH config just for the one node number given.
+	@NODE=$* $(VAGRANT) ssh-config --host "node$*"
 
-status: status-master $(shell for i in $(shell seq 1 $(NODE_COUNT)); do echo "status-node-$$i"; done) ## Show status of master and all node VMs.
+status: status-master $(shell for (( i=1; i<=$(NODE_COUNT); i+=1 )); do echo "status-node-$$i"; done) ## Show status of master and all node VMs.
 
 status-master: ## Show status of the master VM.
 	@set -o pipefail; \
@@ -313,12 +314,40 @@ status-node-%: ## Show status of a node VM, where `%` is the number of the node.
 		fi | \
 			sed '/^$$/d'
 
-status-nodes: $(shell for i in $(shell seq 1 $(NODE_COUNT)); do echo "status-node-$$i"; done) ## Show status of all node VMs.
+status-nodes: $(shell for (( i=1; i<=$(NODE_COUNT); i+=1 )); do echo "status-node-$$i"; done) ## Show status of all node VMs.
 
 tests: ## Run shunit2 tests (`expect` command is required).
 	@KUBERNETES_VERSION=$$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt | sed 's/^v//') \
 		bash ./tests/cluster-tests.sh$(if $(TESTS), -- $(TESTS),)
 
+help: ## Show this help menu.
+	@echo "Usage: make [TARGET ...]"
+	@echo
+	@grep -E '^[a-zA-Z_%-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+
+.DEFAULT_GOAL := help
+.EXPORT_ALL_VARIABLES:
+.PHONY: help kubectl kubectl-delete preflight token up \
+	clean clean-data clean-master clean-nodes \
+	load-image load-image-master load-image-nodes \
+	ssh-config ssh-config-master ssh-config-nodes \
+	ssh-master \
+	start-master start-nodes \
+	status status-master status-nodes \
+	stop stop-master stop-nodes \
+	tests \
+	vagrant-reload vagrant-reload-master vagrant-reload-nodes \
+	vagrant-plugins
+
+.PHONY: docs-serve
+docs-serve:
+	docker run --net=host --volume "$$(pwd)":"$$(pwd)" --workdir "$$(pwd)" -it squidfunk/mkdocs-material
+
+.PHONY: docs-build
+docs-build:
+	docker run --net=host --volume "$$(pwd)":"$$(pwd)" --workdir "$$(pwd)" -it squidfunk/mkdocs-material build --clean
+
+.PHONY: ceph-deploy ceph-teardown ceph-status
 ceph-deploy: ## Deploy rook-ceph based on YAML files in `https://github.com/rook/rook`
 	@set -o pipefail; \
 		if [ -f "$(MFILECWD)add-on/rook/ceph.sh" ]; then \
@@ -346,6 +375,7 @@ ceph-status: ## Get CEPH status and pool state
 			exit 1; \
 		fi
 
+.PHONY: velero-deploy velero-teardown
 velero-deploy: ## Deploy backup/restore `velero` with `minio`
 	@set -o pipefail; \
 		if [ -f "$(MFILECWD)add-on/velero/velero.sh" ]; then \
@@ -363,23 +393,3 @@ velero-teardown: ## Teardown backup/restore `velero`
 			echo "'$(MFILECWD)add-on/velero/velero.sh' NOT exists"; \
 			exit 1; \
 		fi
-
-help: ## Show this help menu.
-	@echo "Usage: make [TARGET ...]"
-	@echo
-	@grep -E '^[a-zA-Z_%-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
-
-.DEFAULT_GOAL := help
-.EXPORT_ALL_VARIABLES:
-.PHONY: help kubectl kubectl-delete preflight token up \
-	ceph-deploy ceph-teardown \
-	clean clean-data clean-master clean-nodes \
-	load-image load-image-master load-image-nodes \
-	ssh-config ssh-config-master ssh-config-nodes \
-	ssh-master \
-	start-master start-nodes \
-	status status-master status-nodes \
-	stop stop-master stop-nodes \
-	tests \
-	vagrant-reload vagrant-reload-master vagrant-reload-nodes \
-	vagrant-plugins
