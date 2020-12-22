@@ -75,9 +75,15 @@ These resources can be changed by setting the according variables for the `make 
 
 ## Quickstart
 
+To get project:
+```shell
+$ git clone https://github.com/sophalHong/prolinux-vagrant-k8s.git --recurse-submodules
+```
+
 To start with the defaults, 1x master and 1x workers, run the following:
 
 ```shell
+$ cd prolinux-vagrant-k8s/
 $ make up -j 2
 ```
 
