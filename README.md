@@ -102,10 +102,11 @@ scheduler            Healthy   ok
 controller-manager   Healthy   ok
 etcd-0               Healthy   {"health": "true"}
 
-$ kubectl get nodes
-NAME     STATUS   ROLES    AGE     VERSION   INTERNAL-IP     EXTERNAL-IP   OS-IMAGE       KERNEL-VERSION           CONTAINER-RUNTIME
-master   Ready    master   6m30s   v1.19.0   192.168.26.10   <none>        ProLinux 7.8   3.10.0-1127.el7.x86_64   docker://19.3.12
-node1    Ready    <none>   3m22s   v1.19.0   192.168.26.11   <none>        ProLinux 7.8   3.10.0-1127.el7.x86_64   docker://19.3.12
+$ kubectl get nodes -owide
+NAME     STATUS   ROLES                  AGE    VERSION   INTERNAL-IP     EXTERNAL-IP   OS-IMAGE     KERNEL-VERSION          CONTAINER-RUNTIME
+master   Ready    control-plane,master   12m    v1.20.4   192.168.26.10   <none>        ProLinux 8   4.18.0-193.el8.x86_64   docker://20.10.5
+node1    Ready    <none>                 8m     v1.20.4   192.168.26.11   <none>        ProLinux 8   4.18.0-193.el8.x86_64   docker://20.10.5
+node2    Ready    <none>                 8m6s   v1.20.4   192.168.26.12   <none>        ProLinux 8   4.18.0-193.el8.x86_64   docker://20.10.5
 ```
 
 ## Different OS / Vagrantfiles
@@ -114,14 +115,15 @@ There are multiple sets of Vagrantfiles available (see [`vagrantfiles/`](/vagran
 
 List of currently available Vagrantfile sets:
 
-| Name      | Container Runtime                           | OS Version   | Special Notes                                                                                                            |
-| --------- | ------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------ |
-| `prolinux`| [Docker/Moby](https://github.com/moby/moby) | ProLinux 7   | N/A                                                                                                                      |
-| `centos7` | [Docker/Moby](https://github.com/moby/moby) | CentOS 7     | N/A                                                                                                                      |
-| `centos8` | [Docker/Moby](https://github.com/moby/moby) | CentOS 8     | `KUBE_NETWORK=calico` is forced, due to issues under CentOS 8 regarding `iptables`.                                      |
-| `centos`  | [Docker/Moby](https://github.com/moby/moby) | CentOS 7     | Use `centos7` in favor of this, as this "target" might be changed to `centos8` in a future release.                      |
-| `fedora`  | [Docker/Moby](https://github.com/moby/moby) | Fedora 30    | N/A                                                                                                                      |
-| `ubuntu`  | [Docker/Moby](https://github.com/moby/moby) | Ubuntu 18.04 | `KUBE_NETWORK=canal` is forced, due to issues under Ubuntu. Additionally Google DNS Servers are used as the nameservers. |
+| Name       | Container Runtime                           | OS Version   | Special Notes                                                                                                            |
+| ---------  | ------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| `prolinux` | [Docker/Moby](https://github.com/moby/moby) | ProLinux 7   | N/A                                                                                                                      |
+| `prolinux8`| [Docker/Moby](https://github.com/moby/moby) | ProLinux 8   | N/A                                                                                                                      |
+| `centos7`  | [Docker/Moby](https://github.com/moby/moby) | CentOS 7     | N/A                                                                                                                      |
+| `centos8`  | [Docker/Moby](https://github.com/moby/moby) | CentOS 8     | `KUBE_NETWORK=calico` is forced, due to issues under CentOS 8 regarding `iptables`.                                      |
+| `centos`   | [Docker/Moby](https://github.com/moby/moby) | CentOS 7     | Use `centos7` in favor of this, as this "target" might be changed to `centos8` in a future release.                      |
+| `fedora`   | [Docker/Moby](https://github.com/moby/moby) | Fedora 30    | N/A                                                                                                                      |
+| `ubuntu`   | [Docker/Moby](https://github.com/moby/moby) | Ubuntu 18.04 | `KUBE_NETWORK=canal` is forced, due to issues under Ubuntu. Additionally Google DNS Servers are used as the nameservers. |
 
 To use a different set than the default `fedora` one's, add `BOX_OS=__NAME__` (where `__NAME__` is, e.g., `fedora`).
 
@@ -270,7 +272,7 @@ versions                       Print the "imporant" tools versions out for easie
 | Variable Name                   | Default Value            | Description                                                                                                                                                                                                                                                                          |
 | ------------------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `VAGRANT_DEFAULT_PROVIDER`      | `virtualbox`             | Which Vagrant provider to use. Available are `virtualbox` and `libvirt`.                                                                                                                                                                                                             |
-| `BOX_OS`                        | `prolinux`                 | Which set of Vagrantfiles to use to start the VMs, see [Different OS / Vagrantfiles](#different-os--vagrantfiles) section.                                                                                                                                                           |
+| `BOX_OS`                        | `prolinux8`              | Which set of Vagrantfiles to use to start the VMs, see [Different OS / Vagrantfiles](#different-os--vagrantfiles) section.                                                                                                                                                           |
 | `BOX_IMAGE`                     | `""` (empty)             | Override the VM box image used (only use for override purposes as the image is set based on the `BOX_OS` variable).                                                                                                                                                                  |
 | `DISK_COUNT`                    | `2`                      | Set how many additional disks will be added to the VMs.                                                                                                                                                                                                                              |
 | `DISK_SIZE_GB`                  | `20` GB                  | Size of additional disks added to the VMs.                                                                                                                                                                                                                                           |
