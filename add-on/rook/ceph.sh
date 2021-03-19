@@ -104,6 +104,7 @@ function check_ceph_cluster_health() {
 	for ((retry = 0; retry <= TIMEOUT; retry = retry + 5)); do
 		echo "Wait for rook deploy... ${retry}s" && sleep 5
 
+		CEPH_NAME=$(kubectl -n rook-ceph get cephclusters -o jsonpath='{.items[0].metadata.name}')
 		CEPH_STATE=$(kubectl -n rook-ceph get cephclusters -o jsonpath='{.items[0].status.state}')
 		CEPH_HEALTH=$(kubectl -n rook-ceph get cephclusters -o jsonpath='{.items[0].status.ceph.health}')
 		echo "Checking CEPH cluster state: [$CEPH_STATE]"
@@ -113,8 +114,8 @@ function check_ceph_cluster_health() {
 				echo -e "\e[34m[OK] Creating CEPH cluster is done. [$CEPH_HEALTH]\e[0m"
 				break
 			elif [ "$CEPH_HEALTH" = "HEALTH_WARN" ]; then
-				CLOCK_SKEW=$(kubectl -n rook-ceph get cephclusters.ceph.rook.io rook-ceph -ojsonpath='{.status.ceph.details.MON_CLOCK_SKEW}')
-				MSG=$(kubectl -n rook-ceph get cephclusters.ceph.rook.io rook-ceph -ojsonpath='{.status.ceph.details.*.message}')
+				CLOCK_SKEW=$(kubectl -n rook-ceph get cephclusters.ceph.rook.io ${CEPH_NAME} -ojsonpath='{.status.ceph.details.MON_CLOCK_SKEW}')
+				MSG=$(kubectl -n rook-ceph get cephclusters.ceph.rook.io ${CEPH_NAME} -ojsonpath='{.status.ceph.details.*.message}')
 				echo -e "\e[32m[Warn] CEPH HEALTH_WARN : [$MSG]\e[0m"
 				[ ! -z "$CLOCK_SKEW" ] && break
 			fi
