@@ -1,0 +1,9 @@
+# Standalone ConfigMap to expose coredns in Rancher
+# without any other ingress contoller reconfiguration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: udp-services
+  namespace: ingress-nginx
+data:
+  53: "kube-system/excoredns:53"
