@@ -45,3 +45,24 @@ velero-teardown: ## Teardown backup/restore `velero`
 			echo "'$(MFILECWD)add-on/velero/velero.sh' NOT exists"; \
 			exit 1; \
 		fi
+
+.PHONY: metallb-deploy metallb-teardown
+metallb-deploy:
+	@cd metallb && $(MAKE) metallb-deploy
+
+metallb-teardown:
+	@cd metallb && $(MAKE) metallb-teardown
+
+.PHONY: excoredns-deploy excoredns-teardown
+excoredns-deploy:
+	@cd coredns/k8s_gateway && $(MAKE) excoredns-deploy
+
+excoredns-teardown:
+	@cd coredns/k8s_gateway && $(MAKE) excoredns-teardown
+
+.PHONY: ingress-nginx-deploy ingress-nginx-teardown
+ingress-nginx-deploy:
+	@cd ingress-nginx && $(MAKE) ingress-nginx-deploy
+
+ingress-nginx-teardown:
+	@cd ingress-nginx && $(MAKE) ingress-nginx-teardown

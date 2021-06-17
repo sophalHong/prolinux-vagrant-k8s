@@ -15,7 +15,7 @@ KUBECTL ?= kubectl
 # Vagrant Provider
 VAGRANT_DEFAULT_PROVIDER ?= virtualbox
 # Vagrantfile set to use.
-BOX_OS ?= prolinux8
+BOX_OS ?= centos8
 # Vagrant Box image to use.
 BOX_IMAGE ?= $(shell grep "^\$$box_image.*=.*'.*'\.freeze" "$(MFILECWD)/vagrantfiles/$(BOX_OS)/common" | cut -d\' -f4)
 # Disk setup
@@ -393,3 +393,24 @@ velero-teardown: ## Teardown backup/restore `velero`
 			echo "'$(MFILECWD)add-on/velero/velero.sh' NOT exists"; \
 			exit 1; \
 		fi
+
+.PHONY: metallb-deploy metallb-teardown
+metallb-deploy:
+	@cd add-on/metallb && $(MAKE) metallb-deploy
+
+metallb-teardown:
+	@cd add-on/metallb && $(MAKE) metallb-teardown
+
+.PHONY: excoredns-deploy excoredns-teardown
+excoredns-deploy:
+	@cd add-on/coredns/k8s_gateway && $(MAKE) excoredns-deploy
+
+excoredns-teardown:
+	@cd add-on/coredns/k8s_gateway && $(MAKE) excoredns-teardown
+
+.PHONY: ingress-nginx-deploy ingress-nginx-teardown
+ingress-nginx-deploy:
+	@cd add-on/ingress-nginx && $(MAKE) ingress-nginx-deploy
+
+ingress-nginx-teardown:
+	@cd add-on/ingress-nginx && $(MAKE) ingress-nginx-teardown

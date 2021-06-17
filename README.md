@@ -1,7 +1,8 @@
-# vagrant-k8s-installer
+# prolinux-vagrant-k8s
+Install Kubernetes cluster on ProLinux OS.
 
-This project was based on work from [ galexrt /
-k8s-vagrant-multi-node](https://github.com/galexrt/k8s-vagrant-multi-node) by [@galexrt](https://github.com/galexrt), now it is mostly independent.
+This project is based on work from [ galexrt /
+k8s-vagrant-multi-node](https://github.com/galexrt/k8s-vagrant-multi-node) by [@galexrt](https://github.com/galexrt) to create Kubernetes cluster.
 
 A demo of the start and destroy of a cluster can be found here: [README.md Demo section](#demo).
 
