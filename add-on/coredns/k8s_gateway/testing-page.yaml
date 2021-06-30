@@ -1,0 +1,74 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-index-html-cm
+  namespace: excoredns
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <title>[Domain] testing page</title>
+    <style>
+        body {
+            width: 35em;
+            margin: 0 auto;
+            font-family: Tahoma, Verdana, Arial, sans-serif;
+        }
+    </style>
+    </head>
+    <body>
+    <h1>Ex-CoreDNS Testing page!</h1>
+    <p>This is testing page.</p>
+
+    <p><em>Author: sophal_hong@tmax.co.kr</em></p>
+    </body>
+    </html>
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: testing-page
+  name: testing-page
+  namespace: excoredns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: testing-page
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: testing-page
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+        ports:
+          - containerPort: 80
+        volumeMounts:
+          - mountPath: /usr/share/nginx/html/index.html
+            name: nginx-conf
+            subPath: index.html
+      volumes:
+        - name: nginx-conf
+          configMap:
+            name: nginx-index-html-cm
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: testing-page
+  name: testing-page
+  namespace: excoredns
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: testing-page
+  type: LoadBalancer
