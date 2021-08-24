@@ -1,0 +1,45 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-test
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: echoserver.ing
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: echoserver
+            port:
+              number: 8080
+  - host: myfruit.ing
+    http:
+      paths:
+      - path: /apple
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx-apple
+            port:
+              number: 80
+      - path: /banana
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx-banana
+            port:
+              number: 80
+  - host: test.192.168.33.104.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: echoserver
+            port:
+              number: 8080
