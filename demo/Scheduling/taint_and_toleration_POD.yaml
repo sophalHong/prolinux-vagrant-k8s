@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: bee
+  name: bee
+spec:
+  tolerations:
+  - key: spray
+    value: mortein
+    effect: NoSchedule
+  containers:
+  - image: nginx
+    name: bee
