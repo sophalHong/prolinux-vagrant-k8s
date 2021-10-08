@@ -1,0 +1,25 @@
+# kubectl create configmap game-config-env-file --from-env-file=./env_files/game-env-file.properties --dry-run=client -oyaml
+---
+apiVersion: v1
+data:
+  allowed: '"true"'
+  enemies: aliens
+  lives: "3"
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: game-config-env-file
+---
+#######
+# When passing --from-env-file multiple times to create a ConfigMap from multiple data sources, only the last env-file is used
+#kubectl create configmap config-multi-env-files --from-env-file=env_files/game-env-file.properties  --from-env-file=env_files/ui-env-file.properties
+#######
+apiVersion: v1
+data:
+  color: purple
+  how: fairlyNice
+  textmode: "true"
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: config-multi-env-files
