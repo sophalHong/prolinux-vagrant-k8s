@@ -36,6 +36,8 @@ rules:
   resources:
   - services
   - namespaces
+  - endpoints
+  - pods
   verbs:
   - list
   - watch
