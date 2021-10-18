@@ -32,12 +32,17 @@ metadata:
   name: excoredns
 rules:
 - apiGroups:
+  - discovery.k8s.io
+  resources:
+  - endpointslices
+  verbs:
+  - list
+  - watch
+- apiGroups:
   - ""
   resources:
   - services
-  - namespaces
-  - endpoints
-  - pods
+  - namespaces  
   verbs:
   - list
   - watch
