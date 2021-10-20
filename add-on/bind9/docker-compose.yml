@@ -1,0 +1,23 @@
+version: "2"
+services:
+    bind-dns:
+        image: sameersbn/bind:latest
+        container_name: bind-dns
+        dns: 8.8.8.8
+#       network_mode: "host"
+        environment:
+            - TZ=Asia/Seoul
+            - ROOT_PASSWORD=secretpassword # user=root
+        volumes:
+            - /home/tmax/ck-dns/data:/data
+            - /etc/localtime:/etc/localtime:ro
+            - /etc/timezone:/etc/timezone:ro
+        restart: always
+        ports:
+            - "127.0.0.1:53:53/udp"
+            - "53:53/tcp"
+            - "10000:10000"
+networks:
+    default:
+        external:
+            name: my-network
