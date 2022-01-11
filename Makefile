@@ -395,22 +395,22 @@ velero-teardown: ## Teardown backup/restore `velero`
 		fi
 
 .PHONY: metallb-deploy metallb-teardown
-metallb-deploy:
+metallb-deploy: ## Deploy metallb
 	@cd add-on/metallb && $(MAKE) metallb-deploy
 
-metallb-teardown:
+metallb-teardown: ## Teardown metallb
 	@cd add-on/metallb && $(MAKE) metallb-teardown
 
 .PHONY: excoredns-deploy excoredns-teardown
-excoredns-deploy:
+excoredns-deploy: ## Deploy External-CoreDNS
 	@cd add-on/coredns/k8s_gateway && $(MAKE) excoredns-deploy
 
-excoredns-teardown:
+excoredns-teardown: ## Teardown External-CoreDNS
 	@cd add-on/coredns/k8s_gateway && $(MAKE) excoredns-teardown
 
 .PHONY: ingress-nginx-deploy ingress-nginx-teardown
-ingress-nginx-deploy:
+ingress-nginx-deploy: ## Deploy Ingress-nginx
 	@cd add-on/ingress-nginx && $(MAKE) ingress-nginx-deploy
 
-ingress-nginx-teardown:
+ingress-nginx-teardown: ## Teardown Ingress-nginx
 	@cd add-on/ingress-nginx && $(MAKE) ingress-nginx-teardown
