@@ -1,0 +1,86 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: bind9
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: bind9
+  name: bind9
+  namespace: bind9
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bind9
+  template:
+    metadata:
+      labels:
+        app: bind9
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: minikube
+      containers:
+      - image: sameersbn/bind
+        name: bind9
+        env:
+        - name: ROOT_PASSWORD
+          value: "secretpassword"
+        - name: WEBMIN_ENABLED
+          value: "true"
+        ports:
+        - containerPort: 53
+          protocol: UDP
+        - containerPort: 53
+          protocol: TCP
+        - containerPort: 10000
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /data
+          name: data
+      volumes:
+        - name: data
+          hostPath:
+            path: /data
+            type: DirectoryOrCreate
+      dnsPolicy: "None"
+      dnsConfig:
+        nameservers:
+        - 8.8.8.8
+        searches:
+        - cluster.local
+        - svc.cluster.local
+        options:
+        - name: ndots
+          value: "2"
+        - name: edns0
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: bind9
+  name: bind9
+  namespace: bind9
+spec:
+  ports:
+  - port: 53
+    protocol: UDP
+    targetPort: 53
+    nodePort: 30053
+    name: 53-udp
+  - port: 53
+    protocol: TCP
+    targetPort: 53
+    name: 53-tcp
+  - port: 10000
+    protocol: TCP
+    targetPort: 10000
+    nodePort: 31000
+    name: ui
+  selector:
+    app: bind9
+  type: NodePort
+---

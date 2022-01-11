@@ -1,0 +1,12 @@
+# kubectl label nodes node3 size=Large
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nodeselector
+spec:
+  containers:
+  - image: nginx
+    name: nodeselector
+  nodeSelector:
+    size: Large
