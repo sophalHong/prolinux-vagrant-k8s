@@ -21,6 +21,9 @@ A demo of the start and destroy of a cluster can be found here: [README.md Demo 
   - [Data inside VM](#data-inside-vm)
   - [Deploy/Teardown rook-ceph](#DeployTeardown-rook\-ceph)
   - [Deploy/Teardown velero (backup/restore)](#DeployTeardown-velero)
+  - [Deploy/Teardown metallb](#DeployTeardown-metallb)
+  - [Deploy/Teardown excoredns](#DeployTeardown-excoredns)
+  - [Deploy/Teardown ingress-nginx](#DeployTeardown-ingress\-nginx)
   - [Show `make` targets](#show-make-targets)
 - [Variables](#variables)
 - [Troubleshooting](#troubleshooting)
@@ -214,6 +217,24 @@ $ make velero-deploy
 $ make velero-teardown
 ```
 
+### Deploy/Teardown metallb
+```shell
+$ make metallb-deploy
+$ make metallb-teardown
+```
+
+### Deploy/Teardown excoredns
+```shell
+$ make excoredns-deploy
+$ make excoredns-teardown
+```
+
+### Deploy/Teardown ingress-nginx
+```shell
+$ make ingress-nginx-deploy
+$ make ingress-nginx-teardown
+```
+
 ### Show `make` targets
 
 ```shell
@@ -229,13 +250,19 @@ clean                          Destroy master and node VMs, delete data and the 
 clean-master                   Remove the master VM and the kubectl context.
 clean-node-%                   Remove a node VM, where `%` is the number of the node.
 clean-nodes                    Remove all node VMs.
+excoredns-deploy               Deploy External-CoreDNS
+excoredns-teardown             Teardown External-CoreDNS
 help                           Show this help menu.
+ingress-nginx-deploy           Deploy Ingress-nginx
+ingress-nginx-teardown         Teardown Ingress-nginx
 kubectl                        Configure kubeconfig context for the cluster using `kubectl config` (automatically done by `up` target).
 kubectl-delete                 Delete the created CLUSTER_NAME context from the kubeconfig (uses kubectl).
 load-image                     Load local/pulled Docker image into master and all node VMs.
 load-image-master              Load local/pulled image into master VM.
 load-image-node-%              Load local/pulled image into node VM, where `%` is the number of the node.
 load-image-nodes               Load local/pulled Docker image into all node VMs.
+metallb-deploy                 Deploy metallb
+metallb-teardown               Teardown metallb
 preflight                      Run checks and gather variables, used for the the `up` target.
 pull                           Add and download, or update the box image for the chosen provider on the host.
 ssh-config-master              Generate SSH config just for the master.
