@@ -31,7 +31,7 @@ NODE_COUNT ?= 2
 LIBVIRT_STORAGE_POOL ?=
 # Network
 MASTER_IP ?= 192.168.56.10
-NODE_IP_NW ?=
+NODE_IP_NW ?= 192.168.56
 POD_NW_CIDR ?=
 # Addons
 ## Kubernetes Dashboard
