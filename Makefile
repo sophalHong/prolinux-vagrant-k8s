@@ -15,7 +15,7 @@ KUBECTL ?= kubectl
 # Vagrant Provider
 VAGRANT_DEFAULT_PROVIDER ?= virtualbox
 # Vagrantfile set to use.
-BOX_OS ?= centos8
+BOX_OS ?= fedora
 # Vagrant Box image to use.
 BOX_IMAGE ?= $(shell grep "^\$$box_image.*=.*'.*'\.freeze" "$(MFILECWD)/vagrantfiles/$(BOX_OS)/common" | cut -d\' -f4)
 # Disk setup
@@ -30,7 +30,7 @@ NODE_COUNT ?= 2
 # Libvirt
 LIBVIRT_STORAGE_POOL ?=
 # Network
-MASTER_IP ?= 192.168.26.10
+MASTER_IP ?= 192.168.56.10
 NODE_IP_NW ?=
 POD_NW_CIDR ?=
 # Addons
