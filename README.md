@@ -81,14 +81,14 @@ These resources can be changed by setting the according variables for the `make 
 
 To get project:
 ```shell
-$ git clone https://github.com/sophalHong/prolinux-vagrant-k8s.git --recurse-submodules
+git clone https://github.com/sophalHong/prolinux-vagrant-k8s.git --recurse-submodules
 ```
 
 To start with the defaults, 1x master and 1x workers, run the following:
 
 ```shell
-$ cd prolinux-vagrant-k8s/
-$ make up -j 2
+cd prolinux-vagrant-k8s/
+make up -j 2
 ```
 
 The `-j2` will cause three VMs to be started in parallel to speed up the cluster creation.
